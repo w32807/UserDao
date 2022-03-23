@@ -5,19 +5,20 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import persistence.ConnectionMaker;
 import persistence.SimpleConnectionMaker;
 import user.User;
 
-public abstract class UserDao {
+public class UserDao {
 	
-	private SimpleConnectionMaker connectionMaker;
+	private ConnectionMaker connectionMaker;
 	
-	public UserDao() {
-		this.connectionMaker = new SimpleConnectionMaker();
+	public UserDao(ConnectionMaker connectionMaker) {
+		this.connectionMaker = connectionMaker;
 	}
 	
 	public void add(User user) throws ClassNotFoundException, SQLException{
-		Connection c = connectionMaker.makeNewConnetion();
+		Connection c = connectionMaker.makeConnection();
 		
 		PreparedStatement ps = c.prepareStatement("insert into users(id, name, password) values (?,?,?)");
 		ps.setString(1, user.getId());
@@ -32,7 +33,7 @@ public abstract class UserDao {
 	}
 
 	public User get(String id) throws ClassNotFoundException, SQLException{
-		Connection c = connectionMaker.makeNewConnetion();
+		Connection c = connectionMaker.makeConnection();
 		
 		PreparedStatement ps = c.prepareStatement("select * from users where id = ?");
 		ps.setString(1, id);
@@ -53,7 +54,7 @@ public abstract class UserDao {
 	}
 	
 	public void delete() throws ClassNotFoundException, SQLException{
-		Connection c = connectionMaker.makeNewConnetion();
+		Connection c = connectionMaker.makeConnection();
 		PreparedStatement ps = c.prepareStatement("delete from users");
 		
 		ps.executeUpdate();
