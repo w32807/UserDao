@@ -5,15 +5,20 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import persistence.SimpleConnectionMaker;
 import user.User;
 
 public abstract class UserDao {
 	
-	// 공통 기능을 메소드로 추출
-	public abstract Connection getConnection() throws ClassNotFoundException, SQLException; 
+	private SimpleConnectionMaker connectionMaker;
+	
+	public UserDao() {
+		this.connectionMaker = new SimpleConnectionMaker();
+	}
 	
 	public void add(User user) throws ClassNotFoundException, SQLException{
-		Connection c = getConnection();
+		Connection c = connectionMaker.makeNewConnetion();
+		
 		PreparedStatement ps = c.prepareStatement("insert into users(id, name, password) values (?,?,?)");
 		ps.setString(1, user.getId());
 		ps.setString(2, user.getName());
@@ -27,7 +32,8 @@ public abstract class UserDao {
 	}
 
 	public User get(String id) throws ClassNotFoundException, SQLException{
-		Connection c = getConnection();
+		Connection c = connectionMaker.makeNewConnetion();
+		
 		PreparedStatement ps = c.prepareStatement("select * from users where id = ?");
 		ps.setString(1, id);
 		
@@ -47,7 +53,7 @@ public abstract class UserDao {
 	}
 	
 	public void delete() throws ClassNotFoundException, SQLException{
-		Connection c = getConnection();
+		Connection c = connectionMaker.makeNewConnetion();
 		PreparedStatement ps = c.prepareStatement("delete from users");
 		
 		ps.executeUpdate();
