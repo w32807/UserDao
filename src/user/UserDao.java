@@ -9,8 +9,7 @@ import java.sql.SQLException;
 public class UserDao {
 	
 	public void add(User user) throws ClassNotFoundException, SQLException{
-		Class.forName("org.h2.Driver");
-		Connection c = DriverManager.getConnection("jdbc:h2:tcp://localhost/~/test", "sa", "");
+		Connection c = getConnection();
 		PreparedStatement ps = c.prepareStatement("insert into users(id, name, password) values (?,?,?)");
 		ps.setString(1, user.getId());
 		ps.setString(2, user.getName());
@@ -22,10 +21,9 @@ public class UserDao {
 		c.close();
 		System.out.println("result >> " + result);
 	}
-	
+
 	public User get(String id) throws ClassNotFoundException, SQLException{
-		Class.forName("org.h2.Driver");
-		Connection c = DriverManager.getConnection("jdbc:h2:tcp://localhost/~/test", "sa", "");
+		Connection c = getConnection();
 		PreparedStatement ps = c.prepareStatement("select * from users where id = ?");
 		ps.setString(1, id);
 		
@@ -45,8 +43,7 @@ public class UserDao {
 	}
 	
 	public void delete() throws ClassNotFoundException, SQLException{
-		Class.forName("org.h2.Driver");
-		Connection c = DriverManager.getConnection("jdbc:h2:tcp://localhost/~/test", "sa", "");
+		Connection c = getConnection();
 		PreparedStatement ps = c.prepareStatement("delete from users");
 		
 		ps.executeUpdate();
@@ -56,6 +53,13 @@ public class UserDao {
 		ps.close();
 		c.close();
 		System.out.println("result >> " + result);
+	}
+	
+	// 공통 기능을 메소드로 추출
+	private Connection getConnection() throws ClassNotFoundException, SQLException {
+		Class.forName("org.h2.Driver");
+		Connection c = DriverManager.getConnection("jdbc:h2:tcp://localhost/~/test", "sa", "");
+		return c;
 	}
 	
 }
