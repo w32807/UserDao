@@ -6,13 +6,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import persistence.ConnectionMaker;
-import persistence.SimpleConnectionMaker;
 import user.User;
 
 public class UserDao {
 	
 	private ConnectionMaker connectionMaker;
 	
+	// connectionMaker를 만드는 책임을 클라이언트에게 떠넘긴다 (만들어서 주입받음)
 	public UserDao(ConnectionMaker connectionMaker) {
 		this.connectionMaker = connectionMaker;
 	}
