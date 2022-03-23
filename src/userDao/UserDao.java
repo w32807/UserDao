@@ -1,12 +1,16 @@
-package user;
+package userDao;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class UserDao {
+import user.User;
+
+public abstract class UserDao {
+	
+	// 공통 기능을 메소드로 추출
+	public abstract Connection getConnection() throws ClassNotFoundException, SQLException; 
 	
 	public void add(User user) throws ClassNotFoundException, SQLException{
 		Connection c = getConnection();
@@ -54,12 +58,4 @@ public class UserDao {
 		c.close();
 		System.out.println("result >> " + result);
 	}
-	
-	// 공통 기능을 메소드로 추출
-	private Connection getConnection() throws ClassNotFoundException, SQLException {
-		Class.forName("org.h2.Driver");
-		Connection c = DriverManager.getConnection("jdbc:h2:tcp://localhost/~/test", "sa", "");
-		return c;
-	}
-	
 }
